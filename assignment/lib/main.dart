@@ -1,92 +1,36 @@
 import 'package:flutter/material.dart';
-import 'chat_service.dart'; // Import your chat service
+import 'admin/view/admin_announcement.dart'; // Import your announcement page
+// import 'view/admin_notification.dart'; // Ensure you import other pages you may use
+// import 'view/admin_profile.dart';
+// import 'view/admin_home.dart';
+// import 'view/admin_activity.dart';
+// import 'view/admin_manage.dart';
+// import 'view/admin_feedback.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Firebase Demo',
+      title: 'Your App Title',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ChatScreen(),
-    );
-  }
-}
-
-class ChatScreen extends StatefulWidget {
-  @override
-  _ChatScreenState createState() => _ChatScreenState();
-}
-
-class _ChatScreenState extends State<ChatScreen> {
-  final TextEditingController _controller = TextEditingController();
-  final ChatService _chatService = ChatService();
-  List<dynamic> _messages = [];
-
-  @override
-  void initState() {
-    super.initState();
-    fetchMessages();
-  }
-
-  Future<void> fetchMessages() async {
-    _messages = await _chatService.fetchMessages();
-    setState(() {});
-  }
-
-  void addMessage(String message) {
-    _chatService.addMessage(message).then((_) {
-      _controller.clear(); // Clear the input after sending
-      fetchMessages(); // Refresh the message list
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Chat'),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: _messages.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(_messages[index]['text']),
-                );
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    decoration: InputDecoration(labelText: 'Send a message'),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: () {
-                    if (_controller.text.isNotEmpty) {
-                      addMessage(_controller.text);
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const AdminAnnouncement(), // Set AdminAnnouncement as the home page
+        // '/admin_notification': (context) => AdminNotification(), // Replace with your actual notification page
+        // '/admin_profile': (context) => AdminProfile(), // Replace with your actual profile page
+        // '/admin_home': (context) => AdminHome(), // Replace with your actual home page
+        // '/admin_activity': (context) => AdminActivity(), // Replace with your actual activity page
+        // '/admin_manage': (context) => AdminManage(), // Replace with your actual manage page
+        // '/admin_feedback': (context) => AdminFeedback(), // Replace with your actual feedback page
+      },
     );
   }
 }
