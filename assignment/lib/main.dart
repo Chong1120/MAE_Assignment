@@ -1,6 +1,8 @@
-import 'package:assignment/admin/view/admin_announcement.dart';
-import 'package:assignment/coach/view/coach_notitfication.dart';
-import 'package:assignment/user/view/user_notitfication.dart';
+import 'admin/view/admin_announcement.dart';
+import 'coach/view/coach_notitfication.dart';
+import 'user/view/user_notitfication.dart';
+import 'general/view/forget_password.dart';
+import 'general/view/reset_success.dart';
 import 'package:flutter/material.dart';
 import 'general/view/login.dart';
 import 'admin/view/admin_notitfication.dart'; 
@@ -30,7 +32,19 @@ class MyApp extends StatelessWidget
       {
         '/': (context) => const LoginPage(), 
 
-        '/admin_announcement': (context) => const AdminAnnouncement(),
+        '/login': (context) => const LoginPage(),
+        '/forget_password': (context) => const ForgetPasswordPage(),
+        '/reset_success': (context) => const ResetSuccessPage(),
+
+        '/admin_announcement': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments; 
+          if (args is Map<String, dynamic>) { 
+            return AdminAnnouncement(userId: args['userId']); 
+          } else {
+            return const LoginPage(); 
+          }
+        },
+
         '/admin_notification': (context) => const AdminNotification(), 
 
 
@@ -43,29 +57,3 @@ class MyApp extends StatelessWidget
     );
   }
 }
-
-// import 'package:firebase_database/firebase_database.dart';
-// import 'package:firebase_core/firebase_core.dart'; // Required to initialize Firebase
-// import 'package:flutter/material.dart'; // Required for Flutter widgets
-
-
-// void main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   await Firebase.initializeApp(); // Initialize Firebase
-//   runApp(MyApp()); // Start your app
-// }
-
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Your App Title',
-//       theme: ThemeData(
-//         primarySwatch: Colors.blue,
-//       ),
-//       // home: YourHomePage(), // Replace with your actual home page widget
-//     );
-//   }
-// }
-

@@ -13,7 +13,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _showError = false; // To control error message visibility
+  bool _showError = false;
+  String? _userId; // Variable to hold the userId
 
   void _handleLogin() async {
     final username = _usernameController.text.trim();
@@ -21,12 +22,18 @@ class _LoginPageState extends State<LoginPage> {
 
     final result = await checkLogin(username, password);
 
-    if (result == 'admin') {
-      Navigator.pushNamed(context, '/admin_announcement');
-    } else if (result == 'coach') {
-      Navigator.pushNamed(context, '/coach_notification');
-    } else if (result == 'user') {
-      Navigator.pushNamed(context, '/user_notification');
+    if (result != null) {
+      // Store userId and navigate based on category
+      _userId = result['userId'];
+      final category = result['category'];
+
+      if (category == 'admin') {
+        Navigator.pushNamed(context, '/admin_announcement', arguments: {'userId': _userId});
+      } else if (category == 'coach') {
+        Navigator.pushNamed(context, '/coach_notification', arguments: _userId);
+      } else if (category == 'user') {
+        Navigator.pushNamed(context, '/user_notification', arguments: _userId);
+      }
     } else {
       setState(() {
         _showError = true;
@@ -39,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  bool _isPasswordVisible = false; // Track password visibility
+  bool _isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +91,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 10),
 
-              // Forgot Password Button
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(

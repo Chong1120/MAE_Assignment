@@ -1,8 +1,11 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
-import '../feature/admin_announcement_f.dart'; // Import the functions file
+import '../feature/admin_announcement_f.dart'; // Import your functions
 
 class AdminAnnouncement extends StatefulWidget {
-  const AdminAnnouncement({super.key});
+  final String userId; // Store the userId passed from the login
+  const AdminAnnouncement({super.key, required this.userId});
 
   @override
   _AdminAnnouncementState createState() => _AdminAnnouncementState();
@@ -16,7 +19,7 @@ class _AdminAnnouncementState extends State<AdminAnnouncement> {
   @override
   void initState() {
     super.initState();
-    fetchAnnouncements(); // Fetch existing announcements when the page loads
+    fetchAnnouncements(); // Fetch announcements when the page loads
   }
 
   void fetchAnnouncements() async {
@@ -32,11 +35,11 @@ class _AdminAnnouncementState extends State<AdminAnnouncement> {
 
     if (title.isNotEmpty && content.isNotEmpty) {
       final dateTime = DateTime.now().toIso8601String();
-      saveAnnouncement('admin1', dateTime, title, content); // Function to save announcement to Firebase
+      saveAnnouncement(widget.userId, dateTime, title, content); // Use widget.userId
 
       _titleController.clear();
       _contentController.clear();
-      fetchAnnouncements(); // Refresh the announcement list after adding a new one
+      fetchAnnouncements(); // Refresh the announcement list after adding
     }
   }
 
@@ -93,15 +96,13 @@ class _AdminAnnouncementState extends State<AdminAnnouncement> {
             TextField(
               controller: _contentController,
               decoration: const InputDecoration(labelText: 'Announcement Content'),
-              maxLines: 5, // Increased max lines for content input
+              maxLines: 5,
             ),
             ElevatedButton(
               onPressed: addAnnouncement,
               child: const Text('Add Announcement'),
             ),
-
             const SizedBox(height: 20),
-
             // Second box: Display existing announcements
             Expanded(
               child: ListView.builder(
@@ -119,10 +120,10 @@ class _AdminAnnouncementState extends State<AdminAnnouncement> {
                             announcement['date_time'],
                             style: const TextStyle(color: Colors.grey, fontSize: 12),
                           ),
-                          const SizedBox(height: 4), // Spacing between date and content
+                          const SizedBox(height: 4),
                           Text(
                             announcement['content'],
-                            maxLines: 5, // Adjust this to show more lines
+                            maxLines: 5,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ],

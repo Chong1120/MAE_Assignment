@@ -3,46 +3,31 @@ import 'package:http/http.dart' as http;
 
 const String databaseURL = 'https://fitness-app-490b6-default-rtdb.asia-southeast1.firebasedatabase.app/';
 
-Future<String> checkLogin(String username, String password) async {
+// Function to check login credentials and return both category and userId if matched
+Future<Map<String, String>?> checkLogin(String username, String password) async {
   final url = Uri.parse('${databaseURL}user.json');
   final response = await http.get(url);
 
   if (response.statusCode == 200) {
     final Map<String, dynamic> data = json.decode(response.body);
 
-    // Check 'admin' category
-    if (data.containsKey('admin')) {
-      final adminData = data['admin'];
-      if (_validateCredentials(adminData, username, password)) {
-        return 'admin';
+    for (var category in ['admin', 'coach', 'user']) {
+      if (data.containsKey(category)) {
+        final userData = data[category];
+        
+        // Check each user ID within the category for a match
+        for (var userId in userData.keys) {
+          final user = userData[userId];
+          if (user['username'] == username && user['password'] == password) {
+            // Return both category and userId in a map
+            return {'category': category, 'userId': userId};
+          }
+        }
       }
     }
-
-    // Check 'coach' category
-    if (data.containsKey('coach')) {
-      final coachData = data['coach'];
-      if (_validateCredentials(coachData, username, password)) {
-        return 'coach';
-      }
-    }
-
-    // Check 'user' category
-    if (data.containsKey('user')) {
-      final userData = data['user'];
-      if (_validateCredentials(userData, username, password)) {
-        return 'user';
-      }
-    }
-
-    // No match found
-    return 'invalid';
+    
+    return null; // Invalid credentials
   } else {
     throw Exception('Failed to load user data');
   }
-}
-
-// Helper function to validate credentials in each category
-bool _validateCredentials(Map<String, dynamic> userData, String username, String password) {
-  // Directly compare the username and password in the given user data
-  return userData['username'] == username && userData['password'] == password;
 }
