@@ -43,3 +43,29 @@ class MyApp extends StatelessWidget
     );
   }
 }
+
+// import 'package:firebase_database/firebase_database.dart';
+// import 'package:firebase_core/firebase_core.dart'; // Required to initialize Firebase
+// import 'package:flutter/material.dart'; // Required for Flutter widgets
+
+
+// void main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   await Firebase.initializeApp(); // Initialize Firebase
+//   runApp(MyApp()); // Start your app
+// }
+
+
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Your App Title',
+//       theme: ThemeData(
+//         primarySwatch: Colors.blue,
+//       ),
+//       // home: YourHomePage(), // Replace with your actual home page widget
+//     );
+//   }
+// }
+
