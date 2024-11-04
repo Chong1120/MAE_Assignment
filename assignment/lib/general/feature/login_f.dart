@@ -5,6 +5,7 @@ const String databaseURL = 'https://fitness-app-490b6-default-rtdb.asia-southeas
 
 // Function to check login credentials and return both category and userId if matched
 Future<Map<String, String>?> checkLogin(String username, String password) async {
+  print("1");
   final url = Uri.parse('${databaseURL}user.json');
   final response = await http.get(url);
 
