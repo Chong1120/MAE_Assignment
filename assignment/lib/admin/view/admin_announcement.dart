@@ -15,6 +15,7 @@ class _AdminAnnouncementState extends State<AdminAnnouncement> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
   List announcements = [];
+  int _currentIndex = 2; // Set the initial index to 2 (Add) as it's the current page
 
   @override
   void initState() {
@@ -52,8 +53,7 @@ class _AdminAnnouncementState extends State<AdminAnnouncement> {
         Navigator.pushNamed(context, '/admin_activity');
         break;
       case 2:
-        // Current page, do nothing
-        break;
+        break; // Current page
       case 3:
         Navigator.pushNamed(context, '/admin_manage');
         break;
@@ -137,6 +137,13 @@ class _AdminAnnouncementState extends State<AdminAnnouncement> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+          navigateToPage(index);
+        },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Activity'),
@@ -144,7 +151,9 @@ class _AdminAnnouncementState extends State<AdminAnnouncement> {
           BottomNavigationBarItem(icon: Icon(Icons.manage_accounts), label: 'Manage'),
           BottomNavigationBarItem(icon: Icon(Icons.feedback), label: 'Feedback'),
         ],
-        onTap: navigateToPage,
+        backgroundColor: Colors.blue, // Set a background color for visibility
+        selectedItemColor: const Color.fromARGB(255, 47, 22, 113),
+        unselectedItemColor: Colors.black,
       ),
     );
   }
