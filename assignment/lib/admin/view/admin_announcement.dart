@@ -1,10 +1,10 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import '../feature/admin_announcement_f.dart'; // Import your functions
+import '../feature/admin_announcement_f.dart'; 
 
 class AdminAnnouncement extends StatefulWidget {
-  final String userId; // Store the userId passed from the login
+  final String userId; 
   const AdminAnnouncement({super.key, required this.userId});
 
   @override
@@ -15,18 +15,18 @@ class _AdminAnnouncementState extends State<AdminAnnouncement> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
   List announcements = [];
-  int _currentIndex = 2; // Set the initial index to 2 (Add) as it's the current page
+  int _currentIndex = 2; 
 
   @override
   void initState() {
     super.initState();
-    fetchAnnouncements(); // Fetch announcements when the page loads
+    fetchAnnouncements(); 
   }
 
   void fetchAnnouncements() async {
-    final fetchedAnnouncements = await getAnnouncements(); // Function to get announcements from Firebase
+    final fetchedAnnouncements = await getAnnouncements(); 
     setState(() {
-      announcements = fetchedAnnouncements; // Update the announcements state
+      announcements = fetchedAnnouncements; 
     });
   }
 
@@ -36,29 +36,29 @@ class _AdminAnnouncementState extends State<AdminAnnouncement> {
 
     if (title.isNotEmpty && content.isNotEmpty) {
       final dateTime = DateTime.now().toIso8601String();
-      saveAnnouncement(widget.userId, dateTime, title, content); // Use widget.userId
+      saveAnnouncement(widget.userId, dateTime, title, content); 
 
       _titleController.clear();
       _contentController.clear();
-      fetchAnnouncements(); // Refresh the announcement list after adding
+      fetchAnnouncements(); 
     }
   }
 
   void navigateToPage(int index) {
     switch (index) {
       case 0:
-        Navigator.pushNamed(context, '/admin_home');
+        Navigator.pushNamed(context, '/admin_home', arguments: {'userId': widget.userId});
         break;
       case 1:
-        Navigator.pushNamed(context, '/admin_activity');
+        Navigator.pushNamed(context, '/admin_activity', arguments: {'userId': widget.userId});
         break;
       case 2:
-        break; // Current page
+        break; 
       case 3:
-        Navigator.pushNamed(context, '/admin_manage');
+        Navigator.pushNamed(context, '/admin_manage', arguments: {'userId': widget.userId});
         break;
       case 4:
-        Navigator.pushNamed(context, '/admin_feedback');
+        Navigator.pushNamed(context, '/admin_feedback', arguments: {'userId': widget.userId});
         break;
     }
   }
@@ -67,18 +67,19 @@ class _AdminAnnouncementState extends State<AdminAnnouncement> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text('Announcements'),
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications),
             onPressed: () {
-              Navigator.pushNamed(context, '/admin_notification');
+              Navigator.pushNamed(context, '/admin_notification', arguments: {'userId': widget.userId});
             },
           ),
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: () {
-              Navigator.pushNamed(context, '/admin_profile');
+              Navigator.pushNamed(context, '/admin_profile', arguments: {'userId': widget.userId});
             },
           ),
         ],
@@ -88,7 +89,6 @@ class _AdminAnnouncementState extends State<AdminAnnouncement> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // First box: Add new announcement
             TextField(
               controller: _titleController,
               decoration: const InputDecoration(labelText: 'Announcement Title'),
@@ -103,7 +103,6 @@ class _AdminAnnouncementState extends State<AdminAnnouncement> {
               child: const Text('Add Announcement'),
             ),
             const SizedBox(height: 20),
-            // Second box: Display existing announcements
             Expanded(
               child: ListView.builder(
                 itemCount: announcements.length,
@@ -151,7 +150,7 @@ class _AdminAnnouncementState extends State<AdminAnnouncement> {
           BottomNavigationBarItem(icon: Icon(Icons.manage_accounts), label: 'Manage'),
           BottomNavigationBarItem(icon: Icon(Icons.feedback), label: 'Feedback'),
         ],
-        backgroundColor: Colors.blue, // Set a background color for visibility
+        backgroundColor: Colors.blue, 
         selectedItemColor: const Color.fromARGB(255, 47, 22, 113),
         unselectedItemColor: Colors.black,
       ),

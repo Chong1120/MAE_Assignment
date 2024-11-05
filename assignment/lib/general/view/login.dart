@@ -28,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
       final category = result['category'];
 
       if (category == 'admin') {
-        Navigator.pushNamed(context, '/admin_announcement', arguments: {'userId': _userId});
+        Navigator.pushNamed(context, '/admin_home', arguments: {'userId': _userId});
       } else if (category == 'coach') {
         Navigator.pushNamed(context, '/coach_notification', arguments: _userId);
       } else if (category == 'user') {

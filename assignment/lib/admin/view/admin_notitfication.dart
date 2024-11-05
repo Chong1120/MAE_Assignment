@@ -3,7 +3,8 @@ import '../feature/admin_notification_f.dart';
 
 class AdminNotification extends StatefulWidget 
 {
-  const AdminNotification({super.key});
+  final String userId; 
+  const AdminNotification({super.key, required this.userId});
 
   @override
   // ignore: library_private_types_in_public_api

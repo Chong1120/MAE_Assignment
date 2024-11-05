@@ -6,6 +6,11 @@ import 'general/view/reset_success.dart';
 import 'package:flutter/material.dart';
 import 'general/view/login.dart';
 import 'admin/view/admin_notitfication.dart'; 
+import 'admin/view/admin_home.dart';
+import 'admin/view/admin_activity.dart';
+import 'admin/view/admin_feedback.dart';
+import 'admin/view/admin_manage.dart';
+import 'admin/view/admin_profile.dart';
 
 
 void main() 
@@ -44,8 +49,54 @@ class MyApp extends StatelessWidget
             return const LoginPage(); 
           }
         },
-
-        '/admin_notification': (context) => const AdminNotification(), 
+        '/admin_home': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments; 
+          if (args is Map<String, dynamic>) { 
+            return AdminHome(userId: args['userId']); 
+          } else {
+            return const LoginPage(); 
+          }
+        },
+        '/admin_activity': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments; 
+          if (args is Map<String, dynamic>) { 
+            return AdminActivity(userId: args['userId']); 
+          } else {
+            return const LoginPage(); 
+          }
+        },
+        '/admin_manage': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments; 
+          if (args is Map<String, dynamic>) { 
+            return AdminManage(userId: args['userId']); 
+          } else {
+            return const LoginPage(); 
+          }
+        },
+        '/admin_feedback': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments; 
+          if (args is Map<String, dynamic>) { 
+            return AdminFeedback(userId: args['userId']); 
+          } else {
+            return const LoginPage(); 
+          }
+        },
+        '/admin_notification': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments; 
+          if (args is Map<String, dynamic>) { 
+            return AdminNotification(userId: args['userId']); 
+          } else {
+            return const LoginPage(); 
+          }
+        }, 
+        '/admin_profile': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments; 
+          if (args is Map<String, dynamic>) { 
+            return AdminProfile(userId: args['userId']); 
+          } else {
+            return const LoginPage(); 
+          }
+        }, 
 
 
         '/coach_notification': (context) => const CoachNotification(),
