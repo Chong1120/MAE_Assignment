@@ -11,7 +11,12 @@ import 'admin/view/admin_activity.dart';
 import 'admin/view/admin_feedback.dart';
 import 'admin/view/admin_manage.dart';
 import 'admin/view/admin_profile.dart';
-
+import 'coach/view/coach_add.dart';
+import 'coach/view/coach_home.dart';
+import 'coach/view/coach_report.dart';
+import 'coach/view/coach_feedback.dart';
+import 'coach/view/coach_profile.dart';
+import 'coach/view/coach_search.dart';
 
 void main() 
 {
@@ -99,8 +104,62 @@ class MyApp extends StatelessWidget
         }, 
 
 
-        '/coach_notification': (context) => const CoachNotification(),
-
+        '/coach_notification': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments; 
+          if (args is Map<String, dynamic>) { 
+            return CoachNotification(userId: args['userId']); 
+          } else {
+            return const LoginPage(); 
+          }
+        },
+        '/coach_home': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments; 
+          if (args is Map<String, dynamic>) { 
+            return CoachHome(userId: args['userId']); 
+          } else {
+            return const LoginPage(); 
+          }
+        },
+        '/coach_feedback': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments; 
+          if (args is Map<String, dynamic>) { 
+            return CoachFeedback(userId: args['userId']); 
+          } else {
+            return const LoginPage(); 
+          }
+        },
+        '/coach_add': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments; 
+          if (args is Map<String, dynamic>) { 
+            return CoachAdd(userId: args['userId']); 
+          } else {
+            return const LoginPage(); 
+          }
+        },
+        '/coach_profile': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments; 
+          if (args is Map<String, dynamic>) { 
+            return CoachProfile(userId: args['userId']); 
+          } else {
+            return const LoginPage(); 
+          }
+        },
+        '/coach_report': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments; 
+          if (args is Map<String, dynamic>) { 
+            return CoachReport(userId: args['userId']); 
+          } else {
+            return const LoginPage(); 
+          }
+        },
+        '/coach_search': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments; 
+          if (args is Map<String, dynamic>) { 
+            return CoachSearch(userId: args['userId']); 
+          } else {
+            return const LoginPage(); 
+          }
+        },
 
         '/user_notification': (context) => const UserNotification(),
 

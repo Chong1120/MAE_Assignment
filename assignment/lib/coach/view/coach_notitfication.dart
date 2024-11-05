@@ -1,20 +1,23 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
-import '../feature/coach_notification_f.dart'; // Import the function file for notifications
+import '../feature/coach_notification_f.dart'; 
 
 class CoachNotification extends StatefulWidget {
-  const CoachNotification({Key? key}) : super(key: key);
+  final String userId; 
+  const CoachNotification({super.key, required this.userId});
 
   @override
   _CoachNotificationState createState() => _CoachNotificationState();
 }
 
 class _CoachNotificationState extends State<CoachNotification> {
-  List notifications = []; // List to store notifications
+  List notifications = []; 
 
   @override
   void initState() {
     super.initState();
-    fetchNotifications(); // Fetch notifications when page loads
+    fetchNotifications(); 
   }
 
   void fetchNotifications() async {
@@ -70,7 +73,7 @@ class _CoachNotificationState extends State<CoachNotification> {
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
-              onTap: () => showFullNotification(notification), // Show full notification on tap
+              onTap: () => showFullNotification(notification), 
             ),
           );
         },
