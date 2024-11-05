@@ -17,6 +17,12 @@ import 'coach/view/coach_report.dart';
 import 'coach/view/coach_feedback.dart';
 import 'coach/view/coach_profile.dart';
 import 'coach/view/coach_search.dart';
+import 'user/view/user_community.dart';
+import 'user/view/user_feedback.dart';
+import 'user/view/user_home.dart';
+import 'user/view/user_nutrition.dart';
+import 'user/view/user_profile.dart';
+import 'user/view/user_report.dart';
 
 void main() 
 {
@@ -161,7 +167,62 @@ class MyApp extends StatelessWidget
           }
         },
 
-        '/user_notification': (context) => const UserNotification(),
+        '/user_notification': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments; 
+          if (args is Map<String, dynamic>) { 
+            return UserNotification(userId: args['userId']); 
+          } else {
+            return const LoginPage(); 
+          }
+        },
+        '/user_home': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments; 
+          if (args is Map<String, dynamic>) { 
+            return UserHome(userId: args['userId']); 
+          } else {
+            return const LoginPage(); 
+          }
+        },
+        '/user_feedback': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments; 
+          if (args is Map<String, dynamic>) { 
+            return UserFeedback(userId: args['userId']); 
+          } else {
+            return const LoginPage(); 
+          }
+        },
+        '/user_community': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments; 
+          if (args is Map<String, dynamic>) { 
+            return UserCommunity(userId: args['userId']); 
+          } else {
+            return const LoginPage(); 
+          }
+        },
+        '/user_profile': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments; 
+          if (args is Map<String, dynamic>) { 
+            return UserProfile(userId: args['userId']); 
+          } else {
+            return const LoginPage(); 
+          }
+        },
+        '/user_report': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments; 
+          if (args is Map<String, dynamic>) { 
+            return UserReport(userId: args['userId']); 
+          } else {
+            return const LoginPage(); 
+          }
+        },
+        '/user_nutrition': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments; 
+          if (args is Map<String, dynamic>) { 
+            return UserNutrition(userId: args['userId']); 
+          } else {
+            return const LoginPage(); 
+          }
+        },
 
       },
     );

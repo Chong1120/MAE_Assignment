@@ -1,8 +1,11 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import '../feature/user_notification_f.dart'; // Import the function file for notifications
 
 class UserNotification extends StatefulWidget {
-  const UserNotification({Key? key}) : super(key: key);
+  final String userId; 
+  const UserNotification({super.key, required this.userId});
 
   @override
   _UserNotificationState createState() => _UserNotificationState();
