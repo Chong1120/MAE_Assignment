@@ -23,6 +23,8 @@ import 'user/view/user_home.dart';
 import 'user/view/user_nutrition.dart';
 import 'user/view/user_profile.dart';
 import 'user/view/user_report.dart';
+import 'coach/view/coach_specific.dart';
+import 'user/view/user_specific.dart';
 
 void main() 
 {
@@ -166,6 +168,14 @@ class MyApp extends StatelessWidget
             return const LoginPage(); 
           }
         },
+        '/coach_specific': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments; 
+          if (args is Map<String, dynamic>) { 
+            return CoachSpecific(userId: args['userId'], suserId: args['suserId']); 
+          } else {
+            return const LoginPage(); 
+          }
+        },
 
         '/user_notification': (context) {
           final args = ModalRoute.of(context)?.settings.arguments; 
@@ -219,6 +229,14 @@ class MyApp extends StatelessWidget
           final args = ModalRoute.of(context)?.settings.arguments; 
           if (args is Map<String, dynamic>) { 
             return UserNutrition(userId: args['userId']); 
+          } else {
+            return const LoginPage(); 
+          }
+        },
+        '/user_specific': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments; 
+          if (args is Map<String, dynamic>) { 
+            return UserSpecific(userId: args['userId'], suserId: args['suserId']); 
           } else {
             return const LoginPage(); 
           }

@@ -1,6 +1,5 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
+import '../feature/coach_home_f.dart';
 
 class CoachHome extends StatefulWidget {
   final String userId; 
@@ -11,8 +10,27 @@ class CoachHome extends StatefulWidget {
 }
 
 class _CoachHomeState extends State<CoachHome> {
+  String? usergender;
   int _currentIndex = 0; 
+  List post = [];
 
+  @override
+  void initState() {
+    super.initState();
+    fetchPost();
+  }
+
+  Future<String> fetchGender(String usserId) async {
+    final fetchedGender = await gender(widget.userId);
+    return fetchedGender;
+  }
+
+  void fetchPost() async {
+    final fetchedPost = await getpost();
+    setState(() {
+      post = fetchedPost;
+    });
+  }
 
   void navigateToPage(int index) {
     switch (index) {
@@ -54,14 +72,45 @@ class _CoachHomeState extends State<CoachHome> {
           ),
         ],
       ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Here is coach Homepage"),
-          ],
-        ),
+      body: ListView.builder(
+        itemCount: post.length,
+        itemBuilder: (context, index) {
+          final posts = post[index];
+          
+          return Card(
+            child: ListTile(
+              title: Text(posts['name']),
+              trailing: FutureBuilder<String>(
+              future: fetchGender(posts['name']),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return const Icon(Icons.error);
+                } else if (snapshot.hasData) {
+                  final gender = snapshot.data!;
+                  return IconButton(
+                    icon: Icon(
+                      gender == 'male'
+                        ? Icons.person_4_rounded
+                        : gender == 'female'
+                          ? Icons.person_3_rounded
+                          : Icons.person, // Default icon if gender is unknown
+                    ),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/coach_specific', arguments: {'userId': widget.userId, 'suserId': posts['name']});
+                    },
+                  );
+                } else {
+                  return const Icon(Icons.help);
+                }
+              },
+            ),
+            ),
+          );
+        },
       ),
+
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
