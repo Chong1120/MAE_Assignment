@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api, use_super_parameters
-
 import 'package:flutter/material.dart';
 import '../feature/login_f.dart'; // Import the login function file
 
@@ -51,6 +49,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
