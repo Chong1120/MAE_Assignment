@@ -1,6 +1,6 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
+import '../feature/coach_report_f.dart';
 
 class CoachReport extends StatefulWidget {
   final String userId; 
@@ -11,7 +11,80 @@ class CoachReport extends StatefulWidget {
 }
 
 class _CoachReportState extends State<CoachReport> {
+  late Future<Map<String, num>> totalLikesCommentsFuture;
+  late Future<List<Map<String, dynamic>>> coachPostsFuture;
+  String selectedSortOption = 'Overall';
+  List<Map<String, dynamic>> coachPosts = [];
   int _currentIndex = 3; 
+
+@override
+  void initState() {
+    super.initState();
+    totalLikesCommentsFuture = calculateTotalLikesAndComments(widget.userId);
+    coachPostsFuture = fetchCoachPosts(widget.userId);
+  }
+
+  void sortPosts(String option) {
+    setState(() {
+      selectedSortOption = option;
+
+      if (option == 'Order by likes') {
+        coachPosts = sortPostsByLikes(coachPosts);
+      } else if (option == 'Order by comments') {
+        coachPosts = sortPostsByComments(coachPosts);
+      }
+    });
+  }
+
+  Widget buildChart() {
+    return selectedSortOption == 'Overall'
+        ? FutureBuilder<Map<String, num>>(
+            future: totalLikesCommentsFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                final data = snapshot.data!;
+                return BarChart(
+                  BarChartData(
+                    alignment: BarChartAlignment.center,
+                    maxY: (data['totalLikes']! + data['totalComments']!).toDouble(),
+                    barGroups: [
+                      BarChartGroupData(
+                        x: 0,
+                        barRods: [
+                          BarChartRodData(
+                            toY: data['totalLikes']!.toDouble(),
+                            color: Colors.blue,
+                            width: 20,
+                          ),
+                          BarChartRodData(
+                            toY: data['totalComments']!.toDouble(),
+                            color: Colors.red,
+                            width: 20,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              }
+            },
+          )
+        : ListView.builder(
+            itemCount: coachPosts.length,
+            itemBuilder: (context, index) {
+              final post = coachPosts[index];
+              return ListTile(
+                title: Text(post['title']),
+                subtitle: Text(
+                    'Likes: ${post['likes_count']} | Comments: ${post['comments_count']}'),
+              );
+            },
+          );
+  }
 
 
   void navigateToPage(int index) {
@@ -54,11 +127,42 @@ class _CoachReportState extends State<CoachReport> {
           ),
         ],
       ),
-      body: const Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Here is coach report page"),
+            DropdownButton<String>(
+              value: selectedSortOption,
+              items: const [
+                DropdownMenuItem(value: 'Overall', child: Text('Overall')),
+                DropdownMenuItem(value: 'Order by likes', child: Text('Order by likes')),
+                DropdownMenuItem(value: 'Order by comments', child: Text('Order by comments')),
+              ],
+              onChanged: (value) {
+                if (value != null) {
+                  sortPosts(value);
+                }
+              },
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: FutureBuilder<List<Map<String, dynamic>>>(
+                future: coachPostsFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (snapshot.hasData) {
+                    coachPosts = snapshot.data!;
+                    return buildChart();
+                  } else {
+                    return const Center(child: Text('No data available'));
+                  }
+                },
+              ),
+            ),
           ],
         ),
       ),
