@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 class UserHome extends StatefulWidget {
-  final String userId; 
+  final String userId;
   const UserHome({super.key, required this.userId});
 
   @override
@@ -11,24 +11,27 @@ class UserHome extends StatefulWidget {
 }
 
 class _UserHomeState extends State<UserHome> {
-  int _currentIndex = 0; 
-
+  int _currentIndex = 0;
 
   void navigateToPage(int index) {
     switch (index) {
       case 0:
         break;
       case 1:
-        Navigator.pushNamed(context, '/user_community', arguments: {'userId': widget.userId});
+        Navigator.pushNamed(context, '/user_community',
+            arguments: {'userId': widget.userId});
         break;
       case 2:
-        Navigator.pushNamed(context, '/user_report', arguments: {'userId': widget.userId});
+        Navigator.pushNamed(context, '/user_report',
+            arguments: {'userId': widget.userId});
         break;
       case 3:
-        Navigator.pushNamed(context, '/user_nutrition', arguments: {'userId': widget.userId});
+        Navigator.pushNamed(context, '/user_nutrition',
+            arguments: {'userId': widget.userId});
         break;
       case 4:
-        Navigator.pushNamed(context, '/user_profile', arguments: {'userId': widget.userId});
+        Navigator.pushNamed(context, '/user_profile',
+            arguments: {'userId': widget.userId});
         break;
     }
   }
@@ -43,13 +46,15 @@ class _UserHomeState extends State<UserHome> {
           IconButton(
             icon: const Icon(Icons.notifications),
             onPressed: () {
-              Navigator.pushNamed(context, '/user_notification', arguments: {'userId': widget.userId});
+              Navigator.pushNamed(context, '/user_notification',
+                  arguments: {'userId': widget.userId});
             },
           ),
           IconButton(
             icon: const Icon(Icons.feedback),
             onPressed: () {
-              Navigator.pushNamed(context, '/user_feedback', arguments: {'userId': widget.userId});
+              Navigator.pushNamed(context, '/user_feedback',
+                  arguments: {'userId': widget.userId});
             },
           ),
         ],
@@ -72,12 +77,15 @@ class _UserHomeState extends State<UserHome> {
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.apartment_rounded), label: 'Community'),
-          BottomNavigationBarItem(icon: Icon(Icons.auto_graph), label: 'Report'),
-          BottomNavigationBarItem(icon: Icon(Icons.restaurant), label: 'Nutrition'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.apartment_rounded), label: 'Community'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.auto_graph), label: 'Report'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.restaurant), label: 'Nutrition'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
-        backgroundColor: Colors.blue, 
+        backgroundColor: Colors.blue,
         selectedItemColor: const Color.fromARGB(255, 47, 22, 113),
         unselectedItemColor: Colors.black,
       ),
