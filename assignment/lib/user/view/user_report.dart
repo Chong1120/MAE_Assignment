@@ -1,6 +1,6 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
+import 'user_weight.dart'; // Import the WeightTab and ExerciseTab widgets
+import 'user_exercise.dart'; 
 
 class UserReport extends StatefulWidget {
   final String userId; 
@@ -10,9 +10,18 @@ class UserReport extends StatefulWidget {
   _UserReportState createState() => _UserReportState();
 }
 
-class _UserReportState extends State<UserReport> {
+class _UserReportState extends State<UserReport> with SingleTickerProviderStateMixin {
   int _currentIndex = 2; 
+  DateTime currentDate = DateTime.now(); 
+  DateTime selectedWeekStart = DateTime.now().subtract(Duration(days: DateTime.now().weekday - 1)); 
 
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this); // 2 tabs (Weight, Exercise)
+  }
 
   void navigateToPage(int index) {
     switch (index) {
@@ -54,13 +63,27 @@ class _UserReportState extends State<UserReport> {
           ),
         ],
       ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Here is user Report page"),
-          ],
-        ),
+      body: Column(
+        children: [
+          // TabBar placed under the AppBar
+          TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(text: 'Weight'),
+              Tab(text: 'Exercise'),
+            ],
+          ),
+          // TabBarView to show content of selected tab
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                UserWeightPage(userId: widget.userId),
+                UserExercisePage(userId: widget.userId),
+              ],
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -78,8 +101,9 @@ class _UserReportState extends State<UserReport> {
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
         backgroundColor: Colors.blue, 
-        selectedItemColor: const Color.fromARGB(255, 47, 22, 113),
-        unselectedItemColor: Colors.black,
+        selectedItemColor: const Color.fromARGB(255, 47, 8, 64), 
+        unselectedItemColor: Colors.white, 
+        type: BottomNavigationBarType.fixed, 
       ),
     );
   }
