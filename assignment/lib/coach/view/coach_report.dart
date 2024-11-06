@@ -36,55 +36,101 @@ class _CoachReportState extends State<CoachReport> {
     });
   }
 
-  Widget buildChart() {
-    return selectedSortOption == 'Overall'
-        ? FutureBuilder<Map<String, num>>(
-            future: totalLikesCommentsFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                final data = snapshot.data!;
-                return BarChart(
-                  BarChartData(
-                    alignment: BarChartAlignment.center,
-                    maxY: (data['totalLikes']! + data['totalComments']!).toDouble(),
-                    barGroups: [
-                      BarChartGroupData(
-                        x: 0,
-                        barRods: [
-                          BarChartRodData(
-                            toY: data['totalLikes']!.toDouble(),
-                            color: Colors.blue,
-                            width: 20,
-                          ),
-                          BarChartRodData(
-                            toY: data['totalComments']!.toDouble(),
-                            color: Colors.red,
-                            width: 20,
-                          ),
-                        ],
+Widget buildChart() {
+  return selectedSortOption == 'Overall'
+      ? FutureBuilder<Map<String, num>>(
+          future: totalLikesCommentsFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              final data = snapshot.data!;
+              return BarChart(
+                BarChartData(
+                  alignment: BarChartAlignment.spaceAround,
+                  maxY: (data['totalLikes']! + data['totalComments']!).toDouble() + 10,
+                  barGroups: [
+                    BarChartGroupData(
+                      x: 0, // Position for "Likes"
+                      barRods: [
+                        BarChartRodData(
+                          toY: data['totalLikes']!.toDouble(),
+                          color: Colors.blue,
+                          width: 20,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ],
+                    ),
+                    BarChartGroupData(
+                      x: 1, // Position for "Comments", set further apart
+                      barRods: [
+                        BarChartRodData(
+                          toY: data['totalComments']!.toDouble(),
+                          color: Colors.red,
+                          width: 20,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ],
+                    ),
+                  ],
+                  titlesData: FlTitlesData(
+                    leftTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false), // Hide the left titles
+                    ),
+                    rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false), // Hide the right titles
+                    ),
+                    topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false), // Hide the top titles
+                    ),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 30,
+                        getTitlesWidget: (value, meta) {
+                          switch (value.toInt()) {
+                            case 0:
+                              return const Text(
+                                'Likes',
+                                style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+                              );
+                            case 1:
+                              return const Text(
+                                'Comments',
+                                style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                              );
+                            default:
+                              return const Text('');
+                          }
+                        },
                       ),
-                    ],
+                    ),
                   ),
-                );
-              }
-            },
-          )
-        : ListView.builder(
-            itemCount: coachPosts.length,
-            itemBuilder: (context, index) {
-              final post = coachPosts[index];
-              return ListTile(
-                title: Text(post['title']),
-                subtitle: Text(
-                    'Likes: ${post['likes_count']} | Comments: ${post['comments_count']}'),
+                  gridData: const FlGridData(show: true),
+                  borderData: FlBorderData(
+                    show: true,
+                    border: Border.all(color: Colors.grey),
+                  ),
+                ),
               );
-            },
-          );
-  }
+            }
+          },
+        )
+      : ListView.builder(
+          itemCount: coachPosts.length,
+          itemBuilder: (context, index) {
+            final post = coachPosts[index];
+            return ListTile(
+              title: Text(post['title']),
+              subtitle: Text(
+                  'Likes: ${post['likes_count']} | Comments: ${post['comments_count']}'),
+            );
+          },
+        );
+}
+
 
 
   void navigateToPage(int index) {
