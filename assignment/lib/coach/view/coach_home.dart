@@ -20,7 +20,7 @@ class _CoachHomeState extends State<CoachHome> {
     fetchPost();
   }
 
-  Future<String> fetchGender(String usserId) async {
+  Future<String> fetchGender(String suserId) async {
     final fetchedGender = await gender(widget.userId);
     return fetchedGender;
   }

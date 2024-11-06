@@ -26,6 +26,7 @@ import 'user/view/user_report.dart';
 import 'coach/view/coach_specific.dart';
 import 'user/view/user_specific.dart';
 import 'general/view/entry_page.dart';
+import 'admin/view/admin_specific.dart';
 
 void main() {
   runApp(const MyApp());
@@ -43,8 +44,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) =>
-            const EntryPage(), // EntryPage is now the initial route
+        '/': (context) => const EntryPage(), 
         '/login': (context) => const LoginPage(),
         '/forget_password': (context) => const ForgetPasswordPage(),
         '/reset_success': (context) => const ResetSuccessPage(),
@@ -101,6 +101,15 @@ class MyApp extends StatelessWidget {
           final args = ModalRoute.of(context)?.settings.arguments;
           if (args is Map<String, dynamic>) {
             return AdminProfile(userId: args['userId']);
+          } else {
+            return const LoginPage();
+          }
+        },
+        '/admin_specific': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments;
+          if (args is Map<String, dynamic>) {
+            return AdminSpecific(
+                userId: args['userId'], suserId: args['suserId']);
           } else {
             return const LoginPage();
           }
