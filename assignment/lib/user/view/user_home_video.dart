@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../feature/user_home_video_f.dart'; // Import the feature file
 import 'package:youtube_player_flutter/youtube_player_flutter.dart'; // Import YouTube player package
+import 'package:intl/intl.dart'; // Import for date formatting
 
 class UserHomeVideo extends StatefulWidget {
   final String userId;
@@ -52,6 +53,29 @@ class _UserHomeVideoState extends State<UserHomeVideo> {
             arguments: {'userId': widget.userId});
         break;
     }
+  }
+
+  void _markWorkoutAsDone() async {
+    // Update user's activity in Firebase
+    await updateUserActivity(widget.userId);
+    // Show motivational message
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Congratulations!'),
+        content: const Text(
+            'You have successfully completed your workout! Keep it up!'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.pop(context); // Navigate back to the previous screen
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -109,6 +133,11 @@ class _UserHomeVideoState extends State<UserHomeVideo> {
                         ListTile(
                           title: Text(video['videoname']),
                           subtitle: Text(video['videodescription']),
+                        ),
+                        ElevatedButton(
+                          onPressed:
+                              _markWorkoutAsDone, // Confirm button action
+                          child: const Text('I\'m Done!'),
                         ),
                       ],
                     ),
