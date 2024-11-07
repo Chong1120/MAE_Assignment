@@ -43,11 +43,10 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => const EntryPage(), 
+        '/': (context) => const EntryPage(),
         '/login': (context) => const LoginPage(),
         '/forget_password': (context) => const ForgetPasswordPage(),
         '/reset_success': (context) => const ResetSuccessPage(),
-
         '/admin_announcement': (context) {
           final args = ModalRoute.of(context)?.settings.arguments;
           if (args is Map<String, dynamic>) {
@@ -104,7 +103,6 @@ class MyApp extends StatelessWidget {
             return const LoginPage();
           }
         },
-
         '/coach_notification': (context) {
           final args = ModalRoute.of(context)?.settings.arguments;
           if (args is Map<String, dynamic>) {
@@ -170,7 +168,6 @@ class MyApp extends StatelessWidget {
             return const LoginPage();
           }
         },
-
         '/user_notification': (context) {
           final args = ModalRoute.of(context)?.settings.arguments;
           if (args is Map<String, dynamic>) {

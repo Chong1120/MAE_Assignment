@@ -1,6 +1,5 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class UserHome extends StatefulWidget {
   final String userId;
@@ -12,6 +11,32 @@ class UserHome extends StatefulWidget {
 
 class _UserHomeState extends State<UserHome> {
   int _currentIndex = 0;
+  final DatabaseReference _dbRef = FirebaseDatabase.instance.ref();
+  Map<String, dynamic> _activities = {};
+  String? _selectedActivityId;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchActivities(); // Fetch activities when the page loads
+  }
+
+  void _fetchActivities() async {
+    try {
+      final snapshot = await _dbRef.child('activity').get();
+      if (snapshot.exists) {
+        setState(() {
+          _activities = snapshot.value as Map<String, dynamic>;
+        });
+      } else {
+        // Handle the case when there are no activities
+        print('No activities found.');
+      }
+    } catch (e) {
+      // Print the error message
+      print('Error fetching activities: $e');
+    }
+  }
 
   void navigateToPage(int index) {
     switch (index) {
@@ -59,11 +84,37 @@ class _UserHomeState extends State<UserHome> {
           ),
         ],
       ),
-      body: const Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Here is user Homepage"),
+            // Display prompt for selecting workout
+            const Text(
+              "What kind of workout would you like to do?",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+
+            // Dropdown for selecting workout category
+            DropdownButton<String>(
+              hint: const Text('Select Workout'),
+              value: _selectedActivityId,
+              items: _activities.keys.map((String key) {
+                return DropdownMenuItem<String>(
+                  value: key,
+                  child: Text(
+                      _activities[key]['category']), // Display the category
+                );
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  _selectedActivityId = value; // Update selected activity
+                });
+              },
+            ),
+            const SizedBox(height: 20),
+
+            // You can add more UI elements or features here as needed
           ],
         ),
       ),
