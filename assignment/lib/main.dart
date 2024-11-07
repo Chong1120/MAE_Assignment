@@ -26,8 +26,9 @@ import 'user/view/user_report.dart';
 import 'coach/view/coach_specific.dart';
 import 'user/view/user_specific.dart';
 import 'general/view/entry_page.dart';
+import 'user/view/user_home_video.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
 }
 
@@ -180,6 +181,17 @@ class MyApp extends StatelessWidget {
           final args = ModalRoute.of(context)?.settings.arguments;
           if (args is Map<String, dynamic>) {
             return UserHome(userId: args['userId']);
+          } else {
+            return const LoginPage();
+          }
+        },
+        '/workout_videos': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments;
+          if (args is Map<String, dynamic>) {
+            return UserHomeVideo(
+              category: args['category'],
+              userId: args['userId'],
+            );
           } else {
             return const LoginPage();
           }

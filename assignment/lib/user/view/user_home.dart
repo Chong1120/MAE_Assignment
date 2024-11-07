@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
+import '../feature/user_home_f.dart'; // Import the feature file
 
 class UserHome extends StatefulWidget {
   final String userId;
+
   const UserHome({super.key, required this.userId});
 
   @override
@@ -11,37 +12,27 @@ class UserHome extends StatefulWidget {
 
 class _UserHomeState extends State<UserHome> {
   int _currentIndex = 0;
-  final DatabaseReference _dbRef = FirebaseDatabase.instance.ref();
-  Map<String, dynamic> _activities = {};
-  String? _selectedActivityId;
+  String? _selectedCategory;
+  List<String> _categories = []; // To hold the workout categories
 
   @override
   void initState() {
     super.initState();
-    _fetchActivities(); // Fetch activities when the page loads
+    _fetchCategories(); // Fetch categories on init
   }
 
-  void _fetchActivities() async {
-    try {
-      final snapshot = await _dbRef.child('activity').get();
-      if (snapshot.exists) {
-        setState(() {
-          _activities = snapshot.value as Map<String, dynamic>;
-        });
-      } else {
-        // Handle the case when there are no activities
-        print('No activities found.');
-      }
-    } catch (e) {
-      // Print the error message
-      print('Error fetching activities: $e');
-    }
+  Future<void> _fetchCategories() async {
+    List<String> categories =
+        await fetchWorkoutCategories(); // Fetch from Firebase
+    setState(() {
+      _categories = categories;
+    });
   }
 
   void navigateToPage(int index) {
     switch (index) {
       case 0:
-        break;
+        break; // Keep current page for Home
       case 1:
         Navigator.pushNamed(context, '/user_community',
             arguments: {'userId': widget.userId});
@@ -61,11 +52,25 @@ class _UserHomeState extends State<UserHome> {
     }
   }
 
+  void _onConfirm() {
+    if (_selectedCategory != null) {
+      // Navigate to the workout videos page based on the selected category
+      Navigator.pushNamed(context, '/workout_videos', arguments: {
+        'category': _selectedCategory,
+        'userId': widget.userId,
+      });
+    } else {
+      // Show a message if no category is selected
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a workout category!')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         title: const Text('Home'),
         actions: [
           IconButton(
@@ -86,36 +91,39 @@ class _UserHomeState extends State<UserHome> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // Display prompt for selecting workout
-            const Text(
-              "What kind of workout would you like to do?",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-
-            // Dropdown for selecting workout category
-            DropdownButton<String>(
-              hint: const Text('Select Workout'),
-              value: _selectedActivityId,
-              items: _activities.keys.map((String key) {
-                return DropdownMenuItem<String>(
-                  value: key,
-                  child: Text(
-                      _activities[key]['category']), // Display the category
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectedActivityId = value; // Update selected activity
-                });
-              },
-            ),
-            const SizedBox(height: 20),
-
-            // You can add more UI elements or features here as needed
-          ],
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Text(
+                "What kind of workout would you like to do?",
+                style: TextStyle(fontSize: 20),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+              DropdownButton<String>(
+                hint: const Text('Select Workout Category'),
+                value: _selectedCategory,
+                items: _categories.map((String category) {
+                  return DropdownMenuItem<String>(
+                    value: category,
+                    child: Text(category),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedCategory = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _onConfirm, // Confirm button action
+                child: const Text('Enter'),
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
