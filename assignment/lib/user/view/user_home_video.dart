@@ -16,7 +16,6 @@ class UserHomeVideo extends StatefulWidget {
 class _UserHomeVideoState extends State<UserHomeVideo> {
   int _currentIndex = 0;
   List<Map<String, dynamic>> _videos = []; // To hold video data
-  late YoutubePlayerController _controller; // Declare controller
 
   @override
   void initState() {
@@ -30,24 +29,6 @@ class _UserHomeVideoState extends State<UserHomeVideo> {
     setState(() {
       _videos = videos;
     });
-    if (_videos.isNotEmpty) {
-      // Initialize the YouTube controller with the first video's ID
-      String initialVideoId =
-          YoutubePlayer.convertUrlToId(_videos[0]['videourl']) ?? '';
-      _controller = YoutubePlayerController(
-        initialVideoId: initialVideoId,
-        flags: const YoutubePlayerFlags(
-          autoPlay: true,
-          mute: false,
-        ),
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose(); // Dispose of the controller
-    super.dispose();
   }
 
   void navigateToPage(int index) {
@@ -77,8 +58,13 @@ class _UserHomeVideoState extends State<UserHomeVideo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         title: const Text('Workout Videos'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back), // Back button icon
+          onPressed: () {
+            Navigator.pop(context); // Go back to the previous screen
+          },
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications),
@@ -105,17 +91,16 @@ class _UserHomeVideoState extends State<UserHomeVideo> {
                 itemCount: _videos.length,
                 itemBuilder: (context, index) {
                   final video = _videos[index];
-                  final videoId = YoutubePlayer.convertUrlToId(
-                      video['videourl']); // Extract video ID
-
                   return Card(
                     child: Column(
                       children: [
                         YoutubePlayer(
                           controller: YoutubePlayerController(
-                            initialVideoId: videoId ?? '',
+                            initialVideoId: YoutubePlayer.convertUrlToId(
+                                    video['videourl']) ??
+                                '',
                             flags: const YoutubePlayerFlags(
-                              autoPlay: true, // Auto play the video
+                              autoPlay: false,
                               mute: false,
                             ),
                           ),
