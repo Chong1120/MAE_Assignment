@@ -1,7 +1,6 @@
 // lib/entry_page.dart
 import 'package:flutter/material.dart';
 import 'dart:async'; // Import for Timer
-import 'package:flutter/services.dart'; // If you want to use SystemChrome, otherwise remove this line
 
 class EntryPage extends StatefulWidget {
   const EntryPage({Key? key}) : super(key: key);
