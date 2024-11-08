@@ -14,8 +14,8 @@ class UserWeightPage extends StatefulWidget {
 
 class _UserWeightPageState extends State<UserWeightPage> {
   late DateTime _selectedDate;
-  late DateTime _startOfWeek; // Start of the current week (Monday)
-  late DateTime _endOfWeek; // End of the current week (Sunday)
+  late DateTime _startOfWeek;
+  late DateTime _endOfWeek; 
   late List<Map<String, dynamic>> _weightData;
   late List<Map<String, dynamic>> _filteredData;
   double _minWeight = 0;
@@ -252,5 +252,6 @@ class _UserWeightPageState extends State<UserWeightPage> {
   Future<void> _addWeightData(DateTime date, double weight) async {
     await addWeightData(widget.userId, date, weight);
     _loadWeightData();
+    _weightController.clear();
   }
 }

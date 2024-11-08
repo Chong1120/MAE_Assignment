@@ -89,16 +89,16 @@ Future<List<Map<String, dynamic>>> fetchActivityData(String userId) async {
 
       List<Map<String, dynamic>> activityList = [];
 
-      // If the data is not null and contains activity records
       // Loop through the activity data and extract each one
       data.forEach((activityId, activityData) {
         activityList.add({
-          'activityId': activityId,  // Store the activity ID
-          'num': activityData['num'],  // The number field
-          'date': activityData['date'],  // Date of the activity
+          'activityId': activityId,             // Store the activity ID
+          'num': activityData['number'],         // Updated to match 'number' field in Firebase
+          'date': activityData['date'],          // Date of the activity
         });
       });
-          return activityList;  // Return the list of activity data
+      print(activityList);
+      return activityList;  // Return the list of activity data
     } else {
       print("Failed to fetch activity data: ${response.statusCode}");
       return [];  // Return empty list if fetch fails
