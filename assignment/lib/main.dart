@@ -1,3 +1,6 @@
+import 'package:assignment/admin/view/admin_activity_add.dart';
+import 'package:assignment/admin/view/admin_activity_edit.dart';
+
 import 'admin/view/admin_announcement.dart';
 import 'coach/view/coach_notitfication.dart';
 import 'user/view/user_notitfication.dart';
@@ -68,6 +71,25 @@ class MyApp extends StatelessWidget {
           final args = ModalRoute.of(context)?.settings.arguments;
           if (args is Map<String, dynamic>) {
             return AdminActivity(userId: args['userId']);
+          } else {
+            return const LoginPage();
+          }
+        },
+        '/add_activity': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments;
+          if (args is Map<String, dynamic>) {
+            return AdminActivityAdd(userId: args['userId']);
+          } else {
+            return const LoginPage();
+          }
+        },
+        '/edit_activity': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments;
+          if (args is Map<String, dynamic>) {
+            return AdminActivityEdit(
+              userId: args['userId'],
+              activity: args['activity'],
+            );
           } else {
             return const LoginPage();
           }
