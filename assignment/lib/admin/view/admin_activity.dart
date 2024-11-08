@@ -64,7 +64,32 @@ class _AdminActivityState extends State<AdminActivity> {
     });
   }
 
-  void _deleteActivity(String activityId) async {
+  void _confirmDeleteActivity(String activityId) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirm Deletion'),
+        content: const Text('Are you sure you want to delete this activity?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            child: const Text('No'),
+          ),
+          TextButton(
+            onPressed: () async {
+              await _deleteActivity(activityId);
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            child: const Text('Yes'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _deleteActivity(String activityId) async {
     await deleteActivity(activityId); // Call delete function from feature file
     _fetchActivities(); // Refresh activities after deleting
   }
@@ -152,8 +177,8 @@ class _AdminActivityState extends State<AdminActivity> {
                               ),
                               IconButton(
                                 icon: const Icon(Icons.delete),
-                                onPressed: () => _deleteActivity(
-                                    activity['id']), // Delete activity
+                                onPressed: () => _confirmDeleteActivity(
+                                    activity['id']), // Confirm delete activity
                               ),
                             ],
                           ),
