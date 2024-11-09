@@ -43,12 +43,27 @@ Future<void> updateUserActivity(String userId) async {
   if (response.statusCode == 200) {
     final Map<String, dynamic>? activitiesData = json.decode(response.body);
 
+    // If there's no activity data yet (for new users)
+    if (activitiesData == null || activitiesData.isEmpty) {
+      // Create a new activity for the user with the current date and set count to 1
+      final newActivityKey =
+          'activity001_$userId'; // Generate a key for the new activity
+      await http.put(
+        Uri.parse('${databaseURL}$userActivityPath/$newActivityKey.json'),
+        body: json.encode({
+          'date': currentDate,
+          'number': 1, // Start with 1 for the new activity
+        }),
+      );
+      return; // Exit the function as we have added the initial activity
+    }
+
     bool dateExists = false;
     String activityKeyToUpdate = '';
     int activityCount = 0;
 
     // Check if any activity has the current date
-    activitiesData?.forEach((key, activity) {
+    activitiesData.forEach((key, activity) {
       if (activity['date'] == currentDate) {
         dateExists = true;
         activityKeyToUpdate = key; // Store the key of the activity to update
@@ -65,7 +80,7 @@ Future<void> updateUserActivity(String userId) async {
     } else {
       // If the date does not exist, create a new activity
       final newActivityKey =
-          'activity00${activitiesData!.length + 1}_$userId'; // Create a new key
+          'activity00${activitiesData.length + 1}_$userId'; // Create a new key
       await http.put(
         Uri.parse('${databaseURL}$userActivityPath/$newActivityKey.json'),
         body: json.encode({
