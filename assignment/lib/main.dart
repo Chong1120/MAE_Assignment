@@ -30,6 +30,7 @@ import 'coach/view/coach_specific.dart';
 import 'user/view/user_specific.dart';
 import 'general/view/entry_page.dart';
 import 'user/view/user_home_video.dart';
+import 'user/view/user_search.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -263,6 +264,14 @@ class MyApp extends StatelessWidget {
           if (args is Map<String, dynamic>) {
             return UserSpecific(
                 userId: args['userId'], suserId: args['suserId']);
+          } else {
+            return const LoginPage();
+          }
+        },
+        '/user_search': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments;
+          if (args is Map<String, dynamic>) {
+            return UserSearch(userId: args['userId']); // New search page
           } else {
             return const LoginPage();
           }

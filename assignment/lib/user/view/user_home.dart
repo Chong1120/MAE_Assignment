@@ -75,6 +75,13 @@ class _UserHomeState extends State<UserHome> {
         title: const Text('Home'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              Navigator.pushNamed(context, '/user_search',
+                  arguments: {'userId': widget.userId});
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.notifications),
             onPressed: () {
               Navigator.pushNamed(context, '/user_notification',
