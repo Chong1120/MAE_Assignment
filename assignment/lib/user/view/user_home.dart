@@ -78,7 +78,13 @@ class _UserHomeState extends State<UserHome> {
             icon: const Icon(Icons.search),
             onPressed: () {
               Navigator.pushNamed(context, '/user_search',
-                  arguments: {'userId': widget.userId});
+                  arguments: {'userId': widget.userId}).then((_) {
+                // Reset selected category and fetch the categories again when coming back
+                setState(() {
+                  _selectedCategory = null;
+                });
+                _fetchCategories(); // Fetch categories again after coming back
+              });
             },
           ),
           IconButton(

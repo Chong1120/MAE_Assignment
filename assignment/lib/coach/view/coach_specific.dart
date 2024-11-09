@@ -26,6 +26,14 @@ class _CoachSpecificState extends State<CoachSpecific> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Coach Profile'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            // Reset the search state in the CoachSearch page
+            Navigator.pop(
+                context, true); // Return with 'true' to trigger refresh
+          },
+        ),
       ),
       body: Center(
         child: Column(

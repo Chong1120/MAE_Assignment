@@ -68,7 +68,8 @@ class _UserHomeVideoState extends State<UserHomeVideo> {
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              Navigator.pop(context); // Navigate back to the previous screen
+              Navigator.pop(
+                  context, true); // Navigate back to the previous screen
             },
             child: const Text('OK'),
           ),
