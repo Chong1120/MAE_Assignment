@@ -1,6 +1,8 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
+import 'admin_coach.dart';
+import 'admin_user.dart';
 
 class AdminManage extends StatefulWidget {
   final String userId; 
@@ -10,9 +12,17 @@ class AdminManage extends StatefulWidget {
   _AdminManageState createState() => _AdminManageState();
 }
 
-class _AdminManageState extends State<AdminManage> {
+class _AdminManageState extends State<AdminManage> with SingleTickerProviderStateMixin {
   int _currentIndex = 3; 
+  late TabController _tabController;
+  DateTime currentDate = DateTime.now(); 
+  DateTime selectedWeekStart = DateTime.now().subtract(Duration(days: DateTime.now().weekday - 1)); 
 
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this); // 2 tabs (Weight, Exercise)
+  }
 
   void navigateToPage(int index) {
     switch (index) {
@@ -54,13 +64,27 @@ class _AdminManageState extends State<AdminManage> {
           ),
         ],
       ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Here is admin Manage"),
-          ],
-        ),
+      body: Column(
+        children: [
+          // TabBar placed under the AppBar
+          TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(text: 'Coach'),
+              Tab(text: 'User'),
+            ],
+          ),
+          // TabBarView to show content of selected tab
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: const [
+                AdminCoachPage(),
+                AdminUserPage(),
+              ],
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,

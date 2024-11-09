@@ -28,8 +28,6 @@ Future<List<Map<String, dynamic>>> fetchWeightData(String userId) async {
               userWeights.forEach((key, weightData) {
                 DateTime date = DateTime.parse(weightData['date']);
                 double value = weightData['value'];
-                print(date);
-                print(value);
                 // Add the data to the weightlist
                 weightlist.add({
                   'date': date.toString(),
