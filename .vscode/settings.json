@@ -1,7 +1,8 @@
 {
     "java.configuration.updateBuildConfiguration": "interactive",
-    "files.autoSave": "off",
-    "dart.flutterGenerateLocalizationsOnSave": "never",
-    "dart.flutterHotReloadOnSave": "manual",
-    "dart.hotReloadOnSave": "allIfDirty"
+    "files.autoSave": "afterDelay",
+    "dart.flutterGenerateLocalizationsOnSave": "allIfDirty",
+    "dart.flutterHotReloadOnSave": "allIfDirty",
+    "dart.hotReloadOnSave": "allIfDirty",
+    "files.autoSaveDelay": 500
 }
