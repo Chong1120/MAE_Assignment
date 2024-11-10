@@ -118,7 +118,12 @@ class _CoachSearchState extends State<CoachSearch> {
                                   'userId': widget.userId,
                                   'suserId': coach['id'],
                                 },
-                              );
+                              ).then((_) {
+                                setState(() {
+                                  _searchResults = [];
+                                  _searchController.clear();
+                                });
+                              });
                             },
                           ),
                         );

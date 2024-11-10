@@ -60,7 +60,7 @@ class _UserCommunityState extends State<UserCommunity> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Home'),
+        title: const Text('Community'),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),

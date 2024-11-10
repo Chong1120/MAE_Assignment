@@ -98,7 +98,13 @@ class _UserSearchState extends State<UserSearch> {
                                     'userId': widget.userId,
                                     'suserId': coach['id'],
                                   },
-                                );
+                                ).then((_) {
+                                  // Reset search results when coming back from CoachSpecific page
+                                  setState(() {
+                                    _searchResults = [];
+                                    _searchController.clear();
+                                  });
+                                });
                               },
                             );
                           },

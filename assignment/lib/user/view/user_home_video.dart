@@ -111,38 +111,87 @@ class _UserHomeVideoState extends State<UserHomeVideo> {
         child: _videos.isEmpty
             ? const Center(
                 child: CircularProgressIndicator()) // Loading indicator
-            : ListView.builder(
-                itemCount: _videos.length,
-                itemBuilder: (context, index) {
-                  final video = _videos[index];
-                  return Card(
-                    child: Column(
-                      children: [
-                        YoutubePlayer(
-                          controller: YoutubePlayerController(
-                            initialVideoId: YoutubePlayer.convertUrlToId(
-                                    video['videourl']) ??
-                                '',
-                            flags: const YoutubePlayerFlags(
-                              autoPlay: false,
-                              mute: false,
-                            ),
-                          ),
-                          showVideoProgressIndicator: true,
-                        ),
-                        ListTile(
-                          title: Text(video['videoname']),
-                          subtitle: Text(video['videodescription']),
-                        ),
-                        ElevatedButton(
-                          onPressed:
-                              _markWorkoutAsDone, // Confirm button action
-                          child: const Text('I\'m Done!'),
-                        ),
-                      ],
+            : SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Workout Videos",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  );
-                },
+                    const SizedBox(height: 20),
+                    // Video List
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: _videos.length,
+                      itemBuilder: (context, index) {
+                        final video = _videos[index];
+                        return Card(
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          elevation: 5,
+                          child: Column(
+                            children: [
+                              // YouTube Player Widget
+                              YoutubePlayer(
+                                controller: YoutubePlayerController(
+                                  initialVideoId: YoutubePlayer.convertUrlToId(
+                                          video['videourl']) ??
+                                      '',
+                                  flags: const YoutubePlayerFlags(
+                                    autoPlay: false,
+                                    mute: false,
+                                  ),
+                                ),
+                                showVideoProgressIndicator: true,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      video['videoname'],
+                                      style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      video['videodescription'],
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              // Mark Workout Button
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: ElevatedButton(
+                                  onPressed: _markWorkoutAsDone,
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 30),
+                                  ),
+                                  child: const Text('I\'m Done!'),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
       ),
       bottomNavigationBar: BottomNavigationBar(

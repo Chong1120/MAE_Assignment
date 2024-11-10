@@ -29,9 +29,9 @@ class _CoachSpecificState extends State<CoachSpecific> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            // Reset the search state in the CoachSearch page
+            // Return to the search page with a signal to refresh it
             Navigator.pop(
-                context, true); // Return with 'true' to trigger refresh
+                context, true); // Indicate that the search page should refresh
           },
         ),
       ),

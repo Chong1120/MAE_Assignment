@@ -58,6 +58,14 @@ class _UserHomeState extends State<UserHome> {
       Navigator.pushNamed(context, '/workout_videos', arguments: {
         'category': _selectedCategory,
         'userId': widget.userId,
+      }).then((completed) {
+        if (completed == true) {
+          // Reset category and fetch categories again after workout is done
+          setState(() {
+            _selectedCategory = null;
+          });
+          _fetchCategories(); // Fetch categories again after coming back
+        }
       });
     } else {
       // Show a message if no category is selected
@@ -105,36 +113,72 @@ class _UserHomeState extends State<UserHome> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Center(
+        child: SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              // Welcome text
+              const SizedBox(height: 20),
+              const Text(
+                "Welcome to FITSPHERE !",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 10),
               const Text(
                 "What kind of workout would you like to do?",
                 style: TextStyle(fontSize: 20),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
-              DropdownButton<String>(
-                hint: const Text('Select Workout Category'),
-                value: _selectedCategory,
-                items: _categories.map((String category) {
-                  return DropdownMenuItem<String>(
-                    value: category,
-                    child: Text(category),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedCategory = value;
-                  });
-                },
+              // Dropdown menu for categories
+              Card(
+                elevation: 8,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: DropdownButton<String>(
+                    hint: const Text('Select Workout Category'),
+                    value: _selectedCategory,
+                    isExpanded: true,
+                    items: _categories.map((String category) {
+                      return DropdownMenuItem<String>(
+                        value: category,
+                        child: Text(category),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedCategory = value;
+                      });
+                    },
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
+              // Button to confirm the category selection
               ElevatedButton(
                 onPressed: _onConfirm, // Confirm button action
+                style: ElevatedButton.styleFrom(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
                 child: const Text('Enter'),
+              ),
+              const SizedBox(height: 20),
+              // Add an image to make it visually appealing
+              Image.asset(
+                'lib/assets/workout_image1.jpeg', // Your image path
+                height: 200,
+                fit: BoxFit.cover,
               ),
             ],
           ),
