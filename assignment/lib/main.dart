@@ -31,6 +31,7 @@ import 'user/view/user_specific.dart';
 import 'general/view/entry_page.dart';
 import 'user/view/user_home_video.dart';
 import 'user/view/user_search.dart';
+import 'general/view/singup.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const EntryPage(),
+        '/sign_up': (context) => const SignUp(),
         '/login': (context) => const LoginPage(),
         '/forget_password': (context) => const ForgetPasswordPage(),
         '/reset_success': (context) => const ResetSuccessPage(),
