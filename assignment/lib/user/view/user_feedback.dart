@@ -52,7 +52,7 @@ class _UserFeedbackState extends State<UserFeedback> {
               TextField(
                 controller: contentController,
                 decoration: const InputDecoration(labelText: 'Content'),
-                maxLines: 3,
+                // maxLines: 3,
               ),
             ],
           ),

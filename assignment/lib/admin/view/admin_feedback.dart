@@ -1,6 +1,8 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
+import 'admin_pending.dart';
+import 'admin_replied.dart';
 
 class AdminFeedback extends StatefulWidget {
   final String userId; 
@@ -10,9 +12,15 @@ class AdminFeedback extends StatefulWidget {
   _AdminFeedbackState createState() => _AdminFeedbackState();
 }
 
-class _AdminFeedbackState extends State<AdminFeedback> {
+class _AdminFeedbackState extends State<AdminFeedback> with SingleTickerProviderStateMixin {
   int _currentIndex = 4; 
+  late TabController _tabController;
 
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this); // 2 tabs (Weight, Exercise)
+  }
 
   void navigateToPage(int index) {
     switch (index) {
@@ -54,11 +62,26 @@ class _AdminFeedbackState extends State<AdminFeedback> {
           ),
         ],
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Here is admin feedback"),
+            TabBar(
+              controller: _tabController,
+              tabs: const[
+                Tab(text: 'Pending'),
+                Tab(text: 'Replied') ,
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: const [
+                  AdminPendingPage(),
+                  AdminRepliedPage(),
+                ],
+              ),
+            ),
           ],
         ),
       ),
