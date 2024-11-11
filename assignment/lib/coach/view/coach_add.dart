@@ -1,6 +1,7 @@
-// ignore_for_file: library_private_types_in_public_api
+// coach_add.dart
 
 import 'package:flutter/material.dart';
+import '../feature/coach_add_f.dart'; // Import the function to add post
 
 class CoachAdd extends StatefulWidget {
   final String userId; 
@@ -12,7 +13,8 @@ class CoachAdd extends StatefulWidget {
 
 class _CoachAddState extends State<CoachAdd> {
   int _currentIndex = 2; 
-
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _contentController = TextEditingController();
 
   void navigateToPage(int index) {
     switch (index) {
@@ -31,6 +33,35 @@ class _CoachAddState extends State<CoachAdd> {
         Navigator.pushNamed(context, '/coach_profile', arguments: {'userId': widget.userId});
         break;
     }
+  }
+
+  // Function to handle adding a new post
+  void addNewPost() async {
+    if (_titleController.text.isNotEmpty && _contentController.text.isNotEmpty) {
+      final response = await addPostToDatabase(
+        widget.userId,
+        _titleController.text,
+        _contentController.text,
+      );
+
+      if (response) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Post added successfully!')),
+        );
+        _titleController.clear();
+        _contentController.clear();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to add post.')),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in both title and content.')),
+      );
+    }
+
+    Navigator.pushNamed(context, '/coach_home', arguments: {'userId': widget.userId});
   }
 
   @override
@@ -54,11 +85,38 @@ class _CoachAddState extends State<CoachAdd> {
           ),
         ],
       ),
-      body: const Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Here is coach add post page"),
+            const Text(
+              'Title:',
+              style: TextStyle(fontSize: 18),
+            ),
+            TextField(
+              controller: _titleController,
+              decoration: const InputDecoration(
+                hintText: 'Enter post title',
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Content:',
+              style: TextStyle(fontSize: 18),
+            ),
+            TextField(
+              controller: _contentController,
+              maxLines: 5,
+              decoration: const InputDecoration(
+                hintText: 'Enter post content',
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: addNewPost,
+              child: const Text('Add'),
+            ),
           ],
         ),
       ),

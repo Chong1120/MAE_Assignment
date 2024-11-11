@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:flutter/material.dart';
 import '../feature/coach_home_f.dart';
 
@@ -10,26 +12,81 @@ class CoachHome extends StatefulWidget {
 }
 
 class _CoachHomeState extends State<CoachHome> {
-  String? usergender;
   int _currentIndex = 0; 
-  List post = [];
+  List<Map<String, dynamic>> posts = [];
 
   @override
   void initState() {
     super.initState();
-    fetchPost();
+    fetchPosts();
   }
 
-  Future<String> fetchGender(String suserId) async {
-    final fetchedGender = await gender(widget.userId);
-    return fetchedGender;
-  }
-
-  void fetchPost() async {
-    final fetchedPost = await getpost();
+  Future<void> fetchPosts() async {
+    final fetchedPosts = await getApprovedPosts();
     setState(() {
-      post = fetchedPost;
+      posts = fetchedPosts;
     });
+  }
+
+  Future<void> _toggleLike(String postId, String userId, bool isLiked) async {
+    await toggleLike(postId, userId, isLiked);
+    fetchPosts();
+  }
+
+  Future<void> _addComment(String postId, String userId, String content) async {
+    await addComment(postId, userId, content);
+    fetchPosts();
+  }
+
+  void _showCommentDialog(String postId) {
+    final TextEditingController commentController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Add Comment'),
+          content: TextField(
+            controller: commentController,
+            decoration: const InputDecoration(hintText: 'Enter your comment'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                await _addComment(postId, widget.userId, commentController.text);
+                Navigator.pop(context);
+              },
+              child: const Text('Comment'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showReportDialog(String postId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Report Post'),
+          content: const Text('Are you sure you want to report this post?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () async {
+                await reportPost(postId);
+                Navigator.pop(context);
+                fetchPosts();
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void navigateToPage(int index) {
@@ -73,39 +130,82 @@ class _CoachHomeState extends State<CoachHome> {
         ],
       ),
       body: ListView.builder(
-        itemCount: post.length,
+        itemCount: posts.length,
         itemBuilder: (context, index) {
-          final posts = post[index];
+          final post = posts[index];
+          final isLiked;
+          if (post['likes'] != 0)
+          {
+            isLiked = post['likes'].containsKey(widget.userId);
+          }
+          else
+          {
+            isLiked = false;
+          }
           
           return Card(
             child: ListTile(
-              title: Text(posts['name']),
-              trailing: FutureBuilder<String>(
-              future: fetchGender(posts['name']),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return const Icon(Icons.error);
-                } else if (snapshot.hasData) {
-                  final gender = snapshot.data!;
-                  return IconButton(
+              title: Row(
+                children: [
+                  IconButton(
                     icon: Icon(
-                      gender == 'male'
+                      post['gender'] == 'male'
                         ? Icons.person_4_rounded
-                        : gender == 'female'
+                        : post['gender'] == 'female'
                           ? Icons.person_3_rounded
                           : Icons.person, // Default icon if gender is unknown
                     ),
                     onPressed: () {
-                      Navigator.pushNamed(context, '/coach_specific', arguments: {'userId': widget.userId, 'suserId': posts['name']});
+                      Navigator.pushNamed(
+                        context,
+                        '/coach_specific',
+                        arguments: {'userId': widget.userId, 'suserId': post['name']},
+                      );
                     },
-                  );
-                } else {
-                  return const Icon(Icons.help);
-                }
-              },
-            ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(post['username']),
+                ],
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(post['datetime']),
+                  Text(post['title'], style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text(post['content']),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(isLiked ? Icons.thumb_up : Icons.thumb_up_alt_outlined),
+                        onPressed: () => _toggleLike(post['id'], widget.userId, isLiked),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.comment),
+                        onPressed: () => _showCommentDialog(post['id']),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.warning),
+                        onPressed: () => _showReportDialog(post['id']),
+                      ),
+                    ],
+                  ),
+                  FutureBuilder<List<Map<String, dynamic>>>(
+                    future: fetchComments(post['id']),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) return const CircularProgressIndicator();
+                      final comments = snapshot.data!;
+                      return Column(
+                        children: comments
+                            .map((comment) => ListTile(
+                                  title: Text(comment['name']),
+                                  subtitle: Text(comment['content']),
+                                ))
+                            .toList(),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           );
         },

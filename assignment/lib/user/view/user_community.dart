@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:flutter/material.dart';
 import '../feature/user_community_f.dart';
 
@@ -10,26 +12,81 @@ class UserCommunity extends StatefulWidget {
 }
 
 class _UserCommunityState extends State<UserCommunity> {
-  String? usergender;
+  List<Map<String, dynamic>> posts = [];
   int _currentIndex = 1;
-  List post = [];
 
   @override
   void initState() {
     super.initState();
-    fetchPost();
+    fetchPosts();
   }
 
-  Future<String> fetchGender(String usserId) async {
-    final fetchedGender = await gender(widget.userId);
-    return fetchedGender;
-  }
-
-  void fetchPost() async {
-    final fetchedPost = await getpost();
+  Future<void> fetchPosts() async {
+    final fetchedPosts = await getApprovedPosts();
     setState(() {
-      post = fetchedPost;
+      posts = fetchedPosts;
     });
+  }
+
+  Future<void> _toggleLike(String postId, String userId, bool isLiked) async {
+    await toggleLike(postId, userId, isLiked);
+    fetchPosts();
+  }
+
+  Future<void> _addComment(String postId, String userId, String content) async {
+    await addComment(postId, userId, content);
+    fetchPosts();
+  }
+
+  void _showCommentDialog(String postId) {
+    final TextEditingController commentController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Add Comment'),
+          content: TextField(
+            controller: commentController,
+            decoration: const InputDecoration(hintText: 'Enter your comment'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                await _addComment(postId, widget.userId, commentController.text);
+                Navigator.pop(context);
+              },
+              child: const Text('Comment'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showReportDialog(String postId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Report Post'),
+          content: const Text('Are you sure you want to report this post?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () async {
+                await reportPost(postId);
+                Navigator.pop(context);
+                fetchPosts();
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void navigateToPage(int index) {
@@ -86,48 +143,87 @@ class _UserCommunityState extends State<UserCommunity> {
         ],
       ),
       body: ListView.builder(
-        itemCount: post.length,
+        itemCount: posts.length,
         itemBuilder: (context, index) {
-          final posts = post[index];
-
+          final post = posts[index];
+          print(post['name']);
+          final isLiked;
+          if (post['likes'] != 0)
+          {
+            isLiked = post['likes'].containsKey(widget.userId);
+          }
+          else
+          {
+            isLiked = false;
+          }
           return Card(
             child: ListTile(
-              title: Text(posts['name']),
-              trailing: FutureBuilder<String>(
-                future: fetchGender(posts['name']),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return const Icon(Icons.error);
-                  } else if (snapshot.hasData) {
-                    final gender = snapshot.data!;
-                    return IconButton(
-                      icon: Icon(
-                        gender == 'male'
-                            ? Icons.person_4_rounded
-                            : gender == 'female'
-                                ? Icons.person_3_rounded
-                                : Icons.person,
+              title: Row(
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      post['gender'] == 'male'
+                        ? Icons.person_4_rounded
+                        : post['gender'] == 'female'
+                          ? Icons.person_3_rounded
+                          : Icons.person, // Default icon if gender is unknown
+                    ),
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/user_specific',
+                        arguments: {'userId': widget.userId, 'suserId': post['name']},
+                      );
+                    },
+                  ),
+                  const SizedBox(width: 8),
+                  Text(post['username']),
+                ],
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(post['datetime']),
+                  Text(post['title'], style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text(post['content']),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(isLiked ? Icons.thumb_up : Icons.thumb_up_alt_outlined),
+                        onPressed: () => _toggleLike(post['id'], widget.userId, isLiked),
                       ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/user_specific',
-                            arguments: {
-                              'userId': widget.userId,
-                              'suserId': posts['name']
-                            });
-                      },
-                    );
-                  } else {
-                    return const Icon(Icons.help);
-                  }
-                },
+                      IconButton(
+                        icon: const Icon(Icons.comment),
+                        onPressed: () => _showCommentDialog(post['id']),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.warning),
+                        onPressed: () => _showReportDialog(post['id']),
+                      ),
+                    ],
+                  ),
+                  FutureBuilder<List<Map<String, dynamic>>>(
+                    future: fetchComments(post['id']),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) return const CircularProgressIndicator();
+                      final comments = snapshot.data!;
+                      return Column(
+                        children: comments
+                            .map((comment) => ListTile(
+                                  title: Text(comment['name']),
+                                  subtitle: Text(comment['content']),
+                                ))
+                            .toList(),
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
           );
         },
       ),
-      bottomNavigationBar: BottomNavigationBar(
+        bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {
@@ -146,8 +242,9 @@ class _UserCommunityState extends State<UserCommunity> {
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
         backgroundColor: Colors.blue,
-        selectedItemColor: const Color.fromARGB(255, 47, 22, 113),
-        unselectedItemColor: Colors.black,
+        selectedItemColor: const Color.fromARGB(255, 47, 8, 64),
+        unselectedItemColor: Colors.white,
+        type: BottomNavigationBarType.fixed,
       ),
     );
   }
