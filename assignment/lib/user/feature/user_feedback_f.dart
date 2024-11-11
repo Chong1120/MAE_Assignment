@@ -28,8 +28,12 @@ Future<List<Map<String, dynamic>>> getUserFeedback(String userId) async {
     }
   });
 
+  // Sort the list by 'datetime' field in descending order (latest to oldest)
+  userFeedbackList.sort((a, b) => DateTime.parse(b['datetime']).compareTo(DateTime.parse(a['datetime'])));
+
   return userFeedbackList;
 }
+
 
 Future<void> addNewFeedback(String userId, String title, String content) async {
   final url = Uri.parse('$databaseURL/feedback.json');
