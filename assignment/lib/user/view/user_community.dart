@@ -241,9 +241,9 @@ class _UserCommunityState extends State<UserCommunity> {
               icon: Icon(Icons.restaurant), label: 'Nutrition'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
-        backgroundColor: Colors.blue,
+        // backgroundColor: Colors.blue,
         selectedItemColor: const Color.fromARGB(255, 47, 8, 64),
-        unselectedItemColor: Colors.white,
+        unselectedItemColor: Colors.black,
         type: BottomNavigationBarType.fixed,
       ),
     );
