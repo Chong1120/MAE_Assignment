@@ -192,7 +192,7 @@ class _CoachProfileState extends State<CoachProfile> {
           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
           BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Add'),
           BottomNavigationBarItem(icon: Icon(Icons.auto_graph), label: 'Report'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(Icons.logout), label: 'Log Out'),
         ],
         backgroundColor: Colors.blue, 
         selectedItemColor: const Color.fromARGB(255, 47, 22, 113),
