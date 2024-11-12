@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../feature/login_f.dart'; // Import the login function file
+import '../feature/login_f.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -12,7 +12,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _showError = false;
-  String? _userId; // Variable to hold the userId
+  String? _userId;
 
   void _handleLogin() async {
     final username = _usernameController.text.trim();
@@ -21,7 +21,6 @@ class _LoginPageState extends State<LoginPage> {
     final result = await checkLogin(username, password);
 
     if (result != null) {
-      // Store userId and navigate based on category
       _userId = result['userId'];
       final category = result['category'];
 
@@ -59,7 +58,6 @@ class _LoginPageState extends State<LoginPage> {
               Image.asset('lib/assets/FITSPHERE.png', height: 150),
               const SizedBox(height: 40),
 
-              // Username TextField
               TextField(
                 controller: _usernameController,
                 decoration: const InputDecoration(
@@ -69,7 +67,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 20),
 
-              // Password TextField with Eye Icon
               TextField(
                 controller: _passwordController,
                 decoration: InputDecoration(
@@ -101,14 +98,12 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 20),
 
-              // Login Button
               ElevatedButton(
                 onPressed: _handleLogin,
                 child: const Text('Login'),
               ),
               const SizedBox(height: 20),
 
-              // Error Message
               if (_showError)
                 Container(
                   padding: const EdgeInsets.all(8),
