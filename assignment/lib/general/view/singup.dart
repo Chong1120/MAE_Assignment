@@ -35,39 +35,58 @@ class _SignUpState extends State<SignUp>{
         title: const Text('Sign Up'),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(controller: _usernameController, decoration: const InputDecoration(labelText: 'Username')),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.male, color: _isMale? Colors.blue : Colors.grey),
-                  onPressed: () => setState(() => _isMale = true)
-                ),
-                IconButton(
-                  icon: Icon(Icons.female, color: !_isMale? Colors.pink : Colors.grey),
-                  onPressed: () => setState(() => _isMale = false)
-                ),
-              ],
+            TextField(controller: _usernameController, decoration: const InputDecoration(labelText: 'Username', 
+            border: OutlineInputBorder(),
             ),
-            TextField(controller: _userheightController, decoration: const InputDecoration(labelText: 'Height')),
-            TextField(controller: _userpasswordController, decoration: const InputDecoration(labelText: 'Password')),
-            TextField(controller: _usersecretpasController, decoration: const InputDecoration(labelText: 'Secret Word')),
-            TextButton(
-              onPressed: () async {
-                await saveNewUser(
-                  null, _usernameController.text, 
-                  _isMale ? 'male' : 'female', _userheightController.text,
-                  _userpasswordController.text, _usersecretpasController.text
-                );
-                Navigator.pop(context);
-              },
-              child: const Text('Sign Up'),
+            ),
+            const SizedBox(height: 20,width: 20),
+          Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            IconButton(
+              icon: Icon(Icons.male, color: _isMale? Colors.blue : Colors.grey),
+              onPressed: () => setState(() => _isMale = true)
+            ),
+            IconButton(
+              icon: Icon(Icons.female, color: !_isMale? Colors.pink : Colors.grey),
+              onPressed: () => setState(() => _isMale = false)
             ),
           ],
+          ),
+          TextField(controller: _userheightController, decoration: const InputDecoration(labelText: 'Height',
+            border: OutlineInputBorder(),
+            ),
+            ),
+            const SizedBox(height: 20,width: 20),
+          TextField(controller: _userpasswordController, decoration: const InputDecoration(labelText: 'Password',
+          border: OutlineInputBorder(),
+          ),
+          ),
+          const SizedBox(height: 20,width: 20),
+          TextField(controller: _usersecretpasController, decoration: const InputDecoration(labelText: 'Secret Word',
+          border: OutlineInputBorder(),
+          ),
+          ),
+          const SizedBox(height: 20,width: 20),
+          ElevatedButton(
+            onPressed: () async {
+              await saveNewUser(
+                null, _usernameController.text, 
+                _isMale ? 'male' : 'female', _userheightController.text,
+                _userpasswordController.text, _usersecretpasController.text
+              );
+              Navigator.pop(context);
+            },
+            child: const Text('Sign Up',),
+          ),
+        ],
         ),
+      ),
       ),
     );
   }

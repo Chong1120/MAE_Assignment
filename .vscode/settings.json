@@ -2,7 +2,8 @@
     "java.configuration.updateBuildConfiguration": "interactive",
     "files.autoSave": "afterDelay",
     "dart.flutterGenerateLocalizationsOnSave": "allIfDirty",
-    "dart.flutterHotReloadOnSave": "allIfDirty",
+    "dart.flutterHotReloadOnSave": "all",
     "dart.hotReloadOnSave": "allIfDirty",
-    "files.autoSaveDelay": 500
+    "files.autoSaveDelay": 500,
+    "dart.flutterGutterIcons": true
 }

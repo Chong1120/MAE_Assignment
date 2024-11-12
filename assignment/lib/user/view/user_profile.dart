@@ -41,7 +41,7 @@ class _UserProfileState extends State<UserProfile> {
 
   Future<void> _fetchUsername() async{
     final username = await searchUser(widget.userId, 'username');
-    _usernameController = TextEditingController(text: username);
+    _usernameController = TextEditingController(text: username,);
     setState(() {
       _username = username;
     });
@@ -143,10 +143,15 @@ class _UserProfileState extends State<UserProfile> {
         ],
       ),
       body: Center(
-        child: Column(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(controller: _usernameController, decoration: const InputDecoration(labelText: 'Username')),
+            TextField(controller: _usernameController, decoration: const InputDecoration(labelText: 'Username', border: OutlineInputBorder(),
+            ),
+            ),
+            const SizedBox(height: 20,width: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -154,15 +159,25 @@ class _UserProfileState extends State<UserProfile> {
                   icon: Icon(Icons.male, color: _isMale? Colors.blue : Colors.grey),
                   onPressed: () => setState(() => _isMale = true)
                 ),
+
                 IconButton(
                   icon: Icon(Icons.female, color: !_isMale? Colors.pink : Colors.grey),
                   onPressed: () => setState(() => _isMale = false)
                 ),
               ],
             ),
-            TextField(controller: _userheightController, decoration: const InputDecoration(labelText: 'Height')),
-            TextField(controller: _userpasswordController, decoration: const InputDecoration(labelText: 'Password')),
-            TextField(controller: _usersecretpasController, decoration: const InputDecoration(labelText: 'Secret Word')),
+            TextField(controller: _userheightController, decoration: const InputDecoration(labelText: 'Height', border: OutlineInputBorder(),
+             ),
+             ),
+             const SizedBox(height: 20, width: 29),
+            TextField(controller: _userpasswordController, decoration: const InputDecoration(labelText: 'Password', border: OutlineInputBorder(),
+            ),
+            ),
+            const SizedBox(height: 20, width: 20),
+            TextField(controller: _usersecretpasController, decoration: const InputDecoration(labelText: 'Secret Word', border: OutlineInputBorder()
+            ),
+            ),
+            const SizedBox(height: 20,width: 20,),
             TextButton(
               onPressed: () async {
                 await saveNewUser(
@@ -176,6 +191,7 @@ class _UserProfileState extends State<UserProfile> {
             )
           ],
         ),
+      ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,

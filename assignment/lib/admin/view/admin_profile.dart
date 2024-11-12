@@ -34,7 +34,9 @@ class _AdminProfileState extends State<AdminProfile> {
         title: const Text('Profile'),
       ),
       body: Center(
-        child: Column(
+        child: Padding(
+          padding: const EdgeInsets.all(40.0),
+          child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('Username: $_username'),
@@ -47,6 +49,7 @@ class _AdminProfileState extends State<AdminProfile> {
           ],
         ),
       ),
-    );
+      ),
+    ); 
   }
 }
