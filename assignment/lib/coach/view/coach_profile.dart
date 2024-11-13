@@ -171,7 +171,6 @@ class _CoachProfileState extends State<CoachProfile> {
                   _isMale ? 'male' : 'female', _userbioController.text,
                   _userpasswordController.text, _usersecretpasController.text
                 );
-                Navigator.pop(context);
               },
               child: const Text('Save'),
             )

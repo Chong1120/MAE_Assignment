@@ -31,7 +31,7 @@ Future<void> saveNewUser(String? userId, String username, String gender, String 
   };
 
   try {
-    await http.post(url, body: json.encode(userData));
+    await http.patch(url, body: json.encode(userData));
   }
   catch (error){
     throw Exception('$error');

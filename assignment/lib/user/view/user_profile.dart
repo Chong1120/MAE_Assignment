@@ -185,7 +185,6 @@ class _UserProfileState extends State<UserProfile> {
                   _isMale ? 'male' : 'female', _userheightController.text,
                   _userpasswordController.text, _usersecretpasController.text
                 );
-                Navigator.pop(context);
               },
               child: const Text('Save'),
             )
