@@ -85,6 +85,25 @@ class _UserProfileState extends State<UserProfile> {
     });
   }
 
+    Future<void> _saveProfile() async {
+    try {
+      await saveNewUser(
+        widget.userId, _usernameController.text, 
+        _isMale ? 'male' : 'female', _userheightController.text,
+        _userpasswordController.text, _usersecretpasController.text
+      );
+      // Displaying a SnackBar upon successful update
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile updated successfully!')),
+      );
+    } catch (error) {
+      // Handle potential errors
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to update profile: $error')),
+      );
+    }
+  }
+
   int _currentIndex = 4;
 
   void navigateToPage(int index) {
@@ -186,7 +205,10 @@ class _UserProfileState extends State<UserProfile> {
                   _userpasswordController.text, _usersecretpasController.text
                 );
               },
-              child: const Text('Save'),
+              child: TextButton(
+                onPressed: _saveProfile,
+                child: const Text('Save'),
+              )
             )
           ],
         ),

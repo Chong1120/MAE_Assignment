@@ -85,6 +85,8 @@ class _CoachProfileState extends State<CoachProfile> {
     });
   }
 
+  
+
   int _currentIndex = 4; 
 
 
@@ -105,6 +107,27 @@ class _CoachProfileState extends State<CoachProfile> {
       case 4:
         Navigator.pushNamed(context, '/');
         break;
+    }
+  }
+    Future<void> _saveProfile() async {
+    try {
+      await saveNewUser(
+        widget.userId, 
+        _usernameController.text, 
+        _isMale ? 'male' : 'female', 
+        _userbioController.text,
+        _userpasswordController.text, 
+        _usersecretpasController.text
+      );
+      // Displaying a SnackBar upon successful update
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile updated successfully!')),
+      );
+    } catch (error) {
+      // Handle potential errors
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to update profile: $error')),
+      );
     }
   }
 
@@ -165,13 +188,7 @@ class _CoachProfileState extends State<CoachProfile> {
             ),
             const SizedBox(height: 20, width: 20,), 
             TextButton(
-              onPressed: () async {
-                await saveNewUser(
-                  widget.userId, _usernameController.text, 
-                  _isMale ? 'male' : 'female', _userbioController.text,
-                  _userpasswordController.text, _usersecretpasController.text
-                );
-              },
+              onPressed: _saveProfile,  // Replace the direct saveNewUser call with _saveProfile
               child: const Text('Save'),
             )
           ],
