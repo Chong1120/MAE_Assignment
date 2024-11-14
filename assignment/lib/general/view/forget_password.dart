@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api, no_leading_underscores_for_local_identifiers
-
 import 'package:flutter/material.dart';
 import '../feature/forget_password_f.dart'; // Import the forget password function file
 
@@ -70,6 +68,14 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Forgot Password'),
+        automaticallyImplyLeading: false, // Don't automatically add a back button
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(), // Navigate back when tapped
+        ),
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
